@@ -44,9 +44,9 @@
   directionalLight.shadow.camera.bottom = 100;
   
   // The "camera" is what sees the stuff:
-  var aspectRatio = window.innerWidth / window.innerHeight;
+  var aspectRatio = 4 / 3;
   var camera = new THREE.PerspectiveCamera(75, aspectRatio, 1, 10000);
-  camera.position.z = 500;
+  camera.position.z = 250;
   scene.add(camera);
   // The "renderer" draws what the camera sees onto the screen:
   var renderer = new THREE.WebGLRenderer({antialias: true});
