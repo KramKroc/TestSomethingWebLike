@@ -107,7 +107,7 @@
     var x = r(3500) - 750;
     var y = r(3500) - 750;
     var z = r(3500) - 750;
-    var texture = new THREE.TextureLoader().load("https://code3Dgames.com/textures/earth.png");
+    var texture = new THREE.TextureLoader().load("/textures/earth.png");
     var cover = new THREE.MeshPhongMaterial({map: texture});
     var shape = new THREE.SphereGeometry(65,320,160);
     var earth = new THREE.Mesh(shape, cover);
