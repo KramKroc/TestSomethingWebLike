@@ -42,7 +42,6 @@
 		<p>Scroll down to start...</p>
 	</section>
 	<section>
-		<p>Earth</p>
 		<div id="game-section"></div>
 	</section>
 	<script src="https://code3Dgames.com/three.js">
@@ -54,6 +53,17 @@
 	<script src="https://code3Dgames.com/spe.js">
 	</script> 
 	<script>
+		const gra = function(min, max) {
+		    return Math.random() * (max - min) + min;
+		}
+		const init = function(){
+			let items = document.querySelectorAll('section');
+			for (let i = 0; i < items.length; i++){
+				items[i].style.background = randomColor({luminosity: 'light'});
+			}
+			cssScrollSnapPolyfill()
+		}
+		init();		
 	       // The "scene" is where stuff in our game will happen:
 	       var scene = new THREE.Scene();
 	       var flat = {flatShading : false};
