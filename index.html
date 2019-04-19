@@ -57,7 +57,7 @@
   var landing = makeEarth();
   var gameOver = false;
   var fire, goalFire;
-  var material = new THREE.TextureLoader().load("https://code3Dgames.com/textures/spe/star.png");
+  var material = new THREE.TextureLoader().load("/textures/star.png");
   fire = new SPE.Group({texture:{value:material}});
   goalFire = new SPE.Emitter({particleCount:1000,maxAge:{value:4}});
   fire.addEmitter(goalFire);
@@ -124,7 +124,7 @@
     var z = r(3500) - 750;
     var surface = rColor();
     
-    var texture = new THREE.TextureLoader().load("https://code3Dgames.com/textures/moon.png");
+    var texture = new THREE.TextureLoader().load("/textures/moon.png");
     
     var shape = new THREE.TetrahedronGeometry(size, Math.floor(r(3)));
     var cover = new THREE.MeshPhongMaterial({map: texture});
