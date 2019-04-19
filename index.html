@@ -52,6 +52,8 @@
 	</script> 
 	<script src="https://code3Dgames.com/spe.js">
 	</script> 
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/randomcolor/0.5.2/randomColor.js">
+	</script>	
 	<script>
 		const gra = function(min, max) {
 		    return Math.random() * (max - min) + min;
@@ -133,6 +135,7 @@
 	         var scoreboard = new Scoreboard();
 	         scoreboard.score(0);
 	         scoreboard.timer();
+		 scoreboard.position('bottomLeft');
 	         scoreboard.stopTimer();
 	         scoreboard.help(
 	           'q/e - roll left/right.\n' +
