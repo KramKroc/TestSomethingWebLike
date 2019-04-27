@@ -34,23 +34,24 @@
 	       directionalLight.shadow.camera.bottom = 100;
 	       
 	       // The "camera" is what sees the stuff:
-	       var aspectRatio = 4 / 3;
+	       var aspectRatio = 4 / 2.5;
 	       var camera = new THREE.PerspectiveCamera(75, aspectRatio, 1, 10000);
 	       camera.position.z = 250;
 	       scene.add(camera);
 	       // The "renderer" draws what the camera sees onto the screen:
 	       var renderer = new THREE.WebGLRenderer({antialias: true});
 	       
-		     var container = document.getElementById('game-section');
-		     container.appendChild(renderer.domElement);
+	       var container = document.getElementById('game-section');
+	       container.appendChild(renderer.domElement);
 		
-         function resizeRenderer() {
-           var width = container.clientWidth * 0.96;
-           var height = width/aspectRatio;
-           renderer.setSize(width, height);
-         }
-         resizeRenderer();
-         window.addEventListener('resize', resizeRenderer, false);
+               function resizeRenderer() {
+                 var width = container.clientWidth * 0.98;
+                 var height = width/aspectRatio;
+                 renderer.setSize(width, height);
+               }
+		
+               resizeRenderer();
+               window.addEventListener('resize', resizeRenderer, false);
 		
 	       // ******** START CODING ON THE NEXT LINE ********
 	       var notAllowed = [];
