@@ -34,7 +34,7 @@
 	       directionalLight.shadow.camera.bottom = 100;
 	       
 	       // The "camera" is what sees the stuff:
-	       var aspectRatio = 4 / 2.5;
+	       var aspectRatio = 4 / 2;
 	       var camera = new THREE.PerspectiveCamera(75, aspectRatio, 1, 10000);
 	       camera.position.z = 250;
 	       scene.add(camera);
@@ -46,9 +46,8 @@
 		
                function resizeRenderer() {
                  var width = container.clientWidth;
-                 //var height = width/aspectRatio;
-		 var height = container.clientHeight;
-                 renderer.setSize(width, height);
+                 var height = width/aspectRatio;
+		 renderer.setSize(width, height);
                }
 		
                resizeRenderer();
