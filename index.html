@@ -37,46 +37,66 @@
         border-bottom: nullpx null null;
         text-decoration: none;
       }
+      .container {
+        scroll-snap-type: y mandatory;
+        overflow-y: scroll;
+
+        border: 2px solid var(--gs0);
+        border-radius: 8px;
+        height: 33vh;
+      }
+
+      .container div {
+        scroll-snap-align: start;
+
+        height: 33vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 4rem;
+      }
+      .container div:nth-child(1) {
+        background: hotpink;
+        color: white;
+      }
+      .container div:nth-child(2) {
+        background: azure;
+      }
+      .container div:nth-child(3) {
+        background: blanchedalmond;
+      }
+      .container div:nth-child(4) {
+        background: lightcoral;
+        color: white;
+      }
     </style>
   </head>
   <body>
-    <div    class="container center-text" >
-      <h1>
-        In the near future space travel is possible.
-      </h1>
-    </div>
-    <div    class="hero center-text hero-head" >
-      <div    class="hero content container" >
+    <div    class="container" >
+      <div    class="center-text" >
+        <h1>
+          In the near future space travel is possible.
+        </h1>
+      </div>
+      <div    class="hero center-text hero-head" >
         <h2>
           AS YOU WILL SOON SEE, THERE ARE HUNDREDS OF ROCKS FLOATING AROUND THE EARTH …
         </h2>
       </div>
-    </div>
-    <div    class="container" >
-      <h3>
-        Now this sounds crazy, of course it does. I mean, you don&#039; t get hundreds of rocks floating around Earth every day, do you? So there must be a reason.
-      </h3>
-      <hr    class="separator" />
-    </div>
-    <div    class="row" style="  margin-top: 30px;
-        ">
-      <div    class="col center-text" >
+      <div    class="center-text" >
         <h2>
           The Reason?
         </h2>
-        <hr    class="separator small" />
-        <p    class="mute" >
+        <p>
           For the last couple of millennia the gravitational forces of Saturn and Jupiter have kept all of the large space rocks away from Earth, Mars, Venus and Mercury. Until now, because on planet Onoctlopa, in another Universe, the aliens know this too. So they sent a massive planet destroying spaceship to destroy those planets.They destroyed Jupiter and Saturn.now Earth is in danger.You are on a spaceship heading for Uranus but you have noticed the destruction of them so you have to rush back to  Earth to warn everyone, while avoiding the rocks on the way.But hurry, because you’re running out of fuel!
         </p>
       </div>
-    </div>
-    <div    class="col center-text" >
-      <p>  <a href="game.html">
-          Let&#039;s Go!
-        </a>
-
-
-      </p>
+      <div    class="center-text" >
+        <p>  <a href="game.html">
+            Let&#039;s Go!
+          </a>
+        </p>
+      </div>
     </div>
   </body>
 </html>
