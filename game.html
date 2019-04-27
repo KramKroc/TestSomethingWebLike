@@ -45,8 +45,9 @@
 	       container.appendChild(renderer.domElement);
 		
                function resizeRenderer() {
-                 var width = container.clientWidth * 0.98;
-                 var height = width/aspectRatio;
+                 var width = container.clientWidth;
+                 //var height = width/aspectRatio;
+		 var height = container.clientHeight;
                  renderer.setSize(width, height);
                }
 		
