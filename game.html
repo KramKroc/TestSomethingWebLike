@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Game Time!</title>
+</head>
+<body>
+	<section>
+		<div id="game-section"></div>
+	</section>
+	<script src="https://code3Dgames.com/three.js">
+	</script> 
+	<script src="https://code3Dgames.com/scoreboard.js">
+	</script> 
+	<script src="https://code3Dgames.com/controls/FlyControls.js">
+	</script> 
+	<script src="https://code3Dgames.com/spe.js">
+	</script> 
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/randomcolor/0.5.2/randomColor.js">
+	</script>	
+	<script>
+         // The "scene" is where stuff in our game will happen:
+	       var scene = new THREE.Scene();
+	       var flat = {flatShading : false};
+	        //var light = new THREE.AmbientLight( 0xffffff );
+	        //scene.add(light);
+	       var directionalLight = new THREE.DirectionalLight('white', 1.5 );
+	       directionalLight.position.set(-200, -60, -50);
+	       directionalLight.castShadown = true;
+	       scene.add( directionalLight );
+	       directionalLight.shadow.camera.left = 100;
+	       directionalLight.shadow.camera.right = 100;
+	       directionalLight.shadow.camera.top = 100;
+	       directionalLight.shadow.camera.bottom = 100;
+	       
+	       // The "camera" is what sees the stuff:
+	       var aspectRatio = 4 / 3;
+	       var camera = new THREE.PerspectiveCamera(75, aspectRatio, 1, 10000);
+	       camera.position.z = 250;
+	       scene.add(camera);
+	       // The "renderer" draws what the camera sees onto the screen:
+	       var renderer = new THREE.WebGLRenderer({antialias: true});
+	       
+		     var container = document.getElementById('game-section');
+		     container.appendChild(renderer.domElement);
+		
+         function resizeRenderer() {
+           var width = container.clientWidth * 0.96;
+           var height = width/aspectRatio;
+           renderer.setSize(width, height);
+         }
+         resizeRenderer();
+         window.addEventListener('resize', resizeRenderer, false);
+		
+	       // ******** START CODING ON THE NEXT LINE ********
+	       var notAllowed = [];
+	       var landing = makeEarth();
+	       var gameOver = false;
+	       var fire, goalFire;
+	       var material = new THREE.TextureLoader().load("/textures/star.png");
+	       fire = new SPE.Group({texture:{value:material}});
+	       goalFire = new SPE.Emitter({particleCount:1000,maxAge:{value:4}});
+	       fire.addEmitter(goalFire);
+	       scene.add(fire.mesh);
+	       goalFire.size.value = 40;
+	       goalFire.size.spread = 10;
+	       goalFire.color.value = [new THREE.Color('red'), new THREE.Color('green')];
+	       
+	       var marker = new THREE.Object3D();
+	       var body = new THREE.IcosahedronGeometry( 35, 0 );
+	       var bodyCover = new THREE.MeshPhongMaterial({color: "khaki"});
+	       var engineCover = new THREE.MeshPhongMaterial({color: "tan"});
+	       var avatar = new THREE.Mesh(body, bodyCover);
+	       var engine = new THREE.TorusKnotGeometry( 20, 4, 35, 4, 1, 5 );
+	       var leftEngine = new THREE.Mesh(engine, engineCover);
+	       var rightEngine = new THREE.Mesh(engine,engineCover);
+	       leftEngine.position.set(-80,0,0);
+	       rightEngine.position.set(75,0,0);
+	       marker.add(avatar);
+	       marker.add(leftEngine);
+	       marker.add(rightEngine);
+	       marker.receiveShadow = true;
+	       scene.add(marker);
+	       marker.add(camera);
+	       
+	       function addScoreboard() {
+	         var scoreboard = new Scoreboard();
+	         scoreboard.score(0);
+	         scoreboard.timer();
+		       scoreboard.stopTimer();
+	         scoreboard.help(
+	           'q/e - roll left/right.\n' +
+	           'w/s - move forward/backward.\n' +
+	           'a/d - move left/right.\n' +
+	           'r/f - move up/down.\n' + 
+	           'left/right keys - turn camera left/right.\n' +
+	           'up/down keys - turn camera up/down.' + 
+	           'o - reset game');
+	         return scoreboard;
+	       }
+	       
+	       function rColor() {
+	         return  new THREE.Color(r(), r(), r());
+	       }
+	       
+	       function makeEarth() {
+	         var x = r(3500) - 750;
+	         var y = r(3500) - 750;
+	         var z = r(3500) - 750;
+	         var texture = new THREE.TextureLoader().load("/textures/earth.png");
+	         var cover = new THREE.MeshPhongMaterial({map: texture});
+	         var shape = new THREE.SphereGeometry(65,320,160);
+	         var earth = new THREE.Mesh(shape, cover);
+	         earth.position.set(x, y, z);
+	         earth.receiveShadow = true;
+	         scene.add(earth);
+	         return earth;
+	       }
+	       
+	       function makePlanet() {
+	         var size = r(64);
+	         var x = r(3500) - 750;
+	         var y = r(3500) - 750;
+	         var z = r(3500) - 750;
+	         var surface = rColor();
+	         
+	         var texture = new THREE.TextureLoader().load("/textures/moon.png");
+	         
+	         var shape = new THREE.TetrahedronGeometry(size, Math.floor(r(3)));
+	         var cover = new THREE.MeshPhongMaterial({map: texture});
+	         var planet = new THREE.Mesh(shape, cover);
+	         planet.position.set(x, y, z);
+	         planet.receiveShadow = true;
+	         notAllowed.push(planet);
+	         scene.add(planet);
+	       }
+	       
+	       function r(max) {
+	         if (max) return max * Math.random();
+	         return Math.random(); 
+	       }
+	       
+	       for (var i=1; i<500; i++){
+	         makePlanet();
+	       }
+	       var controls = new THREE.FlyControls(marker);
+	       controls.movementSpeed = 0;
+	       controls.rollSpeed = 1.9;
+	       controls.dragToLook = true;
+	       controls.autoForward = false;
+	       
+	       var cover = new THREE.PointsMaterial({color: 'white', size: 25});
+	       var shape = new THREE.Geometry();
+	       
+	       var distance = 10000;
+	       for (var i=0; i < 750; i++) {
+	         var ra = 2 * Math.PI * Math.random();
+	         var dec = 2 * Math.PI * Math.random();
+	         
+	         var point = new THREE.Vector3();
+	         point.x = distance * Math.cos(dec) * Math.cos(ra);
+	         point.y = distance * Math.sin(dec);
+	         point.z = distance * Math.cos(dec) * Math.sin(ra);
+	       
+	         shape.vertices.push(point);
+	       }
+	       
+	       var stars = new THREE.Points(shape, cover);
+	       scene.add(stars);
+	       
+	       var scoreboard = addScoreboard();
+	         
+	       var clock = new THREE.Clock();
+	       
+	       function isColliding() {
+	         for (var i=0; i<notAllowed.length; i++) {
+	           var markerVector = new THREE.Vector3(marker.position.x, marker.position.y, marker.position.z);
+	           var planetVector = new THREE.Vector3(notAllowed[i].position.x, notAllowed[i].position.y, notAllowed[i].position.z);
+	           notAllowed[i].rotation.y += r(0.05);
+	           notAllowed[i].rotation.x += r(0.05);
+	           notAllowed[i].rotation.z += r(0.05);
+	           if (markerVector.distanceTo(planetVector) <= 45) return true;
+	         }
+	       }
+	       
+	       function hasLanded() {
+	         var markerVector = new THREE.Vector3(marker.position.x, marker.position.y, marker.position.z);
+	         var earthVector = new THREE.Vector3(landing.position.x, landing.position.y, landing.position.z);
+	         landing.rotation.x += 0.001;
+	         if (markerVector.distanceTo(earthVector) <= 65) return true;
+	         return false;
+	       }
+	       
+	       function checkForGameOver() {
+	         if (!gameOver) {
+	           if (isColliding()) {
+	             gameOver = true;
+	             addCrashLight();
+	             goalFire.enable();
+	             marker.visible = false;
+	             scoreboard.stopTimer();
+	             scoreboard.message("You crashed! Press l to restart");
+	             controls.movementSpeed = 0;
+	           }
+	           if (scoreboard.getTime() > 30) {
+	             gameOver = true;
+	             scoreboard.stopTimer();
+	             scoreboard.message("Time's up! Too slow! Press l to restart");
+	             controls.movementSpeed = 0;
+	           }
+	           if (hasLanded()) {
+	             gameOver = true;
+	             controls.movementSpeed = 0;
+	             scoreboard.stopTimer();
+	             scoreboard.message("You made it! Press l to restart");
+	             var score = Math.floor(31 - scoreboard.getTime());
+	             scoreboard.addPoints(score);
+	             if (scoreboard.getTime() < 25) scoreboard.addPoints(100);
+	             if (scoreboard.getTime() < 17) scoreboard.addPoints(200);
+	             if (scoreboard.getTime() < 10) scoreboard.addPoints(500);
+	           }
+	         }
+	       }
+	       
+	       function reset() {
+	         marker.position.set(0,0,0);
+	         scoreboard.resetTimer();
+	         scoreboard.score(0);
+	         scoreboard.stopTimer();
+	         scoreboard.clearMessage();
+	         scoreboard.message("Press l to start");
+	         gameOver = false;
+	         goalFire.disable();
+	         marker.visible = true;
+	         controls.movementSpeed = 0;
+	       }
+	       
+	       function beginGame() {
+	         reset();
+	         controls.movementSpeed = 1100;
+	         scoreboard.clearMessage();
+	         scoreboard.startTimer();
+	       }
+	       
+	       document.addEventListener('keydown', sendKeyDown);
+	       function sendKeyDown(event) {
+	         var code = event.code;
+	         if (code == 'KeyO') reset();
+	         if (code == 'KeyL') beginGame();
+	       }
+	       
+	       function addCrashLight(){
+	         goalFire.position.value = new THREE.Vector3(marker.position.x,marker.position.y,marker.position.z);
+	         goalFire.velocity.value = new THREE.Vector3(0,275,0);
+	         goalFire.velocity.spread = new THREE.Vector3(50,27.5,25);
+	         goalFire.acceleration.value = new THREE.Vector3(0,-15,0);
+	         goalFire.position.spread = new THREE.Vector3(25,0,0);
+	       }
+	       
+	       function animate() {
+	         if (!checkForGameOver()) {
+	           var delta = clock.getDelta();
+	           controls.update(delta);
+	           fire.tick(delta);
+	           rightEngine.rotation.y += 0.25;
+	           leftEngine.rotation.y -= 0.25;
+	           avatar.rotation.x -= 0.03;
+	           avatar.rotation.y -= 0.03;
+	           renderer.render(scene, camera);
+	           requestAnimationFrame(animate);
+	         }
+	       }
+	       
+	       animate();
+	       // Now, show what the camera sees on the screen:
+	       renderer.render(scene, camera);
+	       reset();
+	</script>
+</body>
+</html>
